@@ -1,0 +1,37 @@
+Jobs
+
+
+<div  ng-controller="IndexController" >
+  <accordion close-others="oneAtATime">
+
+	<div  ng-repeat="job in jobs " > 	
+	    <accordion-group heading={{job.name}}>
+	    	<p>		{{job.description}} </p>
+				<div ng-repeat="step in job.steps">
+					{{step.name}}-{{step.description}}
+				</div>
+	    
+	    </accordion-group>
+	
+	</div>
+</div>
+
+
+
+
+
+<script>
+
+
+    // create the module and name it freemdm
+ function IndexCtrl($scope,$http,$location) {
+  	$http({method: 'GET', url:'job_api_index'}).
+	success(function(data, status, headers, config) {
+		//console.log(data);
+	       $scope.jobs = data; 
+	       console.log($scope.jobs);           
+	});
+  }
+
+
+</script>
