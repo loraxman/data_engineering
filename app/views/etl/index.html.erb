@@ -2,19 +2,32 @@ Jobs
 
 
 <div  ng-controller="IndexController" >
+
   <accordion close-others="oneAtATime">
 
-	<div  ng-repeat="job in jobs " > 	
+	<div  ng-repeat="job in jobs "> 	
 	    <accordion-group heading={{job.name}}>
+ 	    <piechart divname="test1"></piechart>
 	    	<p>		{{job.description}} </p>
-				<div ng-repeat="step in job.steps">
+				<div id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>
+				<div></div>
 					{{step.name}}-{{step.description}}
+					<p>These wait on this step:</p>
+					<div ng-repeat="wait in step.waiting_on">
+						{{wait}}
+					</div>
 				</div>
-	    
+	 	    <piechart divname="test2"></piechart>
+				
+			
 	    </accordion-group>
-	
 	</div>
+	</accordion>
+	</div>
+
+ 
 </div>
+
 
 
 
@@ -22,16 +35,6 @@ Jobs
 
 <script>
 
-
-    // create the module and name it freemdm
- function IndexCtrl($scope,$http,$location) {
-  	$http({method: 'GET', url:'job_api_index'}).
-	success(function(data, status, headers, config) {
-		//console.log(data);
-	       $scope.jobs = data; 
-	       console.log($scope.jobs);           
-	});
-  }
 
 
 </script>
