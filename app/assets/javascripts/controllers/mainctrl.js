@@ -27,6 +27,9 @@ dataeng.controller('FirstCtrl', ['$scope', function($scope) {
         }             
     }
 }]);
+
+//below directive allows raphel to have a div passed in 
+//so that it can attach to the div at runtime from angular
 dataeng.directive('piechart', function() {
     return {
         restrict: 'E',
