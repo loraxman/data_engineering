@@ -34,7 +34,8 @@ dataeng.directive('piechart', function() {
     return {
         restrict: 'E',
         scope: {
-            divname: '='
+            divname: '=',
+            waits: '='
             
         },
         template: function(element,attrs) {
@@ -42,10 +43,53 @@ dataeng.directive('piechart', function() {
         },
         	
         link: function(scope, element, attrs) {
-        	console.log(attrs);
-            var r = Raphael(attrs.divname, 150,150);
-     
-            r.circle(60,50,50);         
+        	//console.log(scope.waits);
+            var r = Raphael(attrs.divname, 350,200);
+            var back = r.rect(0,0,350,200,5);
+            back.attr({'fill':'#C7C7C7'});
+            var x=25;
+            var colors=['#F2676C','green','#5BAAE6', 'yellow','orange','grey'];
+            
+            console.log(scope.waits);
+            console.log(typeof scope.waits);
+            var circles={};
+            for (var i in scope.waits) {
+            	
+            	console.log(scope.waits[i]);
+            	var y = Math.random()*170;
+            	circles[scope.waits[i].name] = r.circle(x,y,20); 
+            	circles[scope.waits[i].name].attr({'fill':colors[i]});
+        	//	circles[scope.waits[i].name].attr({'fill':colors[i]});
+
+            	r.text(x+5, y, scope.waits[i].name);
+            	x+=70;
+            }
+            //connect
+            for (var i in scope.waits) {
+            	// get a node
+            	// do  line as to who waits on me to other nodes
+            	var node1 = scope.waits[i];
+            	for (var j in node1.waiting_on) {
+            		//console.log(circles[node1.waiting_on[j]]);
+            		var cl = circles[node1.waiting_on[j]];
+            		var pt1x = cl.attr('cx');
+            		var pt1y = cl.attr('cy');
+            		var clthis = circles[node1.name];
+            		var pt2x = clthis.attr('cx');
+            		var pt2y = clthis.attr('cy');
+            		console.log(node1.name);
+            		console.log(node1.waiting_on[j]);
+            		var line  = r.path( ["M", pt1x, pt1y, "L", pt2x,pt2y ]);
+            		line.attr({'stroke':colors[i], 'opacity':.45});
+            		var midx = (pt1x+pt2x)/2;
+            		var midy = (pt1y+pt2y)/2;
+            		var linelabel = r.text(midx,midy,node1.name);
+            		linelabel.attr({'stroke':colors[i]});
+            		//cl.attr({'fill':colors[i]});
+            	}
+            	
+            }
+            	
         }
     }
 });
