@@ -1,5 +1,5 @@
 class EtlController < ApplicationController
-
+  layout "data_engineering"
   def index
     uri = URI.parse("#{Settings.etl_srv_url}/jobs")
     

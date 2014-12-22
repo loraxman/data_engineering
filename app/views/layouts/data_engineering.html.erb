@@ -46,12 +46,32 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">DataEngineering</a>
+        <a class="navbar-brand" href="/home/index">DataEngineering</a>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-            <li><%= link_to "ETL Jobs", "/path1"  %></li>
             <li><%= link_to "Test Suite", "/path2"  %></li>
-            <li><%= link_to "Model Meta Data", "/path3"  %></li>
+            <li class="dropdown">
+            	<a href="#" data-toggle="dropdown" class="dropdown-toggle">ETL Jobs<b class="caret"></b></a>
+            	               <ul class="dropdown-menu">
+                    <li><a href="/etl/index">Job Definitions</a></li>
+                    <li><a href="#">Running Jobs</a></li>
+                    <li><a href="#">Stats</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Other</a></li>
+                </ul>
+            </li>
+           <li class="dropdown">
+            	<a href="#" data-toggle="dropdown" class="dropdown-toggle">Models<b class="caret"></b></a>
+            	               <ul class="dropdown-menu">
+                    <li><a href="/etl/index">Schema</a></li>
+                    <li><a href="#">Graphs</a></li>
+                    <li><a href="#">Metadata</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Other</a></li>
+                </ul>
+            </li>
+            
+            <li><%= link_to "pgAsimov", "/path3"  %></li>
           </ul>
         </div>
       </div>

@@ -1,4 +1,4 @@
-Jobs
+
 
 
 <div  ng-controller="IndexController" >
@@ -13,10 +13,6 @@ Jobs
 				<div id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>
 				<div></div>
 					{{step.name}}-{{step.description}}
-					<p>These wait on this step:</p>
-					<div ng-repeat="wait in step.waiting_on">
-						{{wait}}
-					</div>
 				</div>
 				
 			
