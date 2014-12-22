@@ -12,7 +12,13 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
         
 	});
 });
-
+function nodeover( ) {
+	this.attr({'r':50});
+	
+}
+function nodeout() {
+	this.attr({'r':20});
+	}
 
 dataeng.controller('FirstCtrl', ['$scope', function($scope) {
 
@@ -44,23 +50,34 @@ dataeng.directive('piechart', function() {
         	
         link: function(scope, element, attrs) {
         	//console.log(scope.waits);
-            var r = Raphael(attrs.divname, 350,200);
-            var back = r.rect(0,0,350,200,5);
+            var r = Raphael(attrs.divname, 450,200);
+            var back = r.rect(0,0,450,200,5);
             back.attr({'fill':'#C7C7C7'});
             var x=25;
             var colors=['#F2676C','green','#5BAAE6', 'yellow','orange','grey'];
             
-            console.log(scope.waits);
-            console.log(typeof scope.waits);
             var circles={};
+            var textpop="";
             for (var i in scope.waits) {
             	
-            	console.log(scope.waits[i]);
             	var y = Math.random()*170;
             	circles[scope.waits[i].name] = r.circle(x,y,20); 
             	circles[scope.waits[i].name].attr({'fill':colors[i]});
-        	//	circles[scope.waits[i].name].attr({'fill':colors[i]});
 
+            	circles[scope.waits[i].name].data({'custom':"run after this: \n"});
+            	circles[scope.waits[i].name].mouseover(function nodeover(i) {
+            	
+            		this.animate({'r':30},250);
+            		var textstr = "waiting on stuff";
+            		textpop = this.paper.text(400,50,this.data('custom'));
+           		
+            	});
+            	circles[scope.waits[i].name].mouseout(function nodeover() {
+            		
+            		this.animate({'r':20},250);
+            		textpop.remove();
+            		
+            	});
             	r.text(x+5, y, scope.waits[i].name);
             	x+=70;
             }
@@ -77,14 +94,16 @@ dataeng.directive('piechart', function() {
             		var clthis = circles[node1.name];
             		var pt2x = clthis.attr('cx');
             		var pt2y = clthis.attr('cy');
-            		console.log(node1.name);
-            		console.log(node1.waiting_on[j]);
             		var line  = r.path( ["M", pt1x, pt1y, "L", pt2x,pt2y ]);
             		line.attr({'stroke':colors[i], 'opacity':.45});
             		var midx = (pt1x+pt2x)/2;
             		var midy = (pt1y+pt2y)/2;
             		var linelabel = r.text(midx,midy,node1.name);
             		linelabel.attr({'stroke':colors[i]});
+            		var datstr = circles[node1.name].data('custom');
+            		datstr = datstr + " " + node1.waiting_on[j];
+                	circles[node1.name].data({'custom':datstr});
+
             		//cl.attr({'fill':colors[i]});
             	}
             	
@@ -93,6 +112,7 @@ dataeng.directive('piechart', function() {
         }
     }
 });
+
 
 function d3test() {
     var sampleSVG = d3.select("#testit")
