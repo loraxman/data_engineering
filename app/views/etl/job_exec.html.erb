@@ -12,7 +12,12 @@
  	    
 	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"></button>
 	    			<button type="button" ng-click="jobstatus()" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"></button>
- 						{{status}}
+ 						<div ng-repeat="stat in status">
+ 							<div ng-if="stat.state == 'STARTED'">  	
+
+ 								<p>{{stat}}</p>
+ 							</div>
+ 						</div>
  				</div>
 	    	<p>		{{job.description}} </p>
 				<div id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>
