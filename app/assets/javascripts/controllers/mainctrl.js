@@ -1,8 +1,14 @@
     // create the module and name it freemdm
         // also include ngRoute for all our routing needs
 var dataeng = angular.module('dataeng', ['ngRoute','ui.bootstrap']);
+
+dataeng.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+}]);
+
 dataeng.controller('IndexController', function($scope , $http, $routeParams) {
-    
+
  	$http({method: 'GET', url:'job_api_index'}).
 	success(function(data, status, headers, config) {
 	       $scope.jobs = data; 
@@ -12,6 +18,35 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
         
 	});
 });
+
+dataeng.controller('JobExecController', function($scope , $http, $routeParams) {
+     $scope.jobexec = function(yaml) {
+      /* the $http service allows you to make arbitrary ajax requests.
+       * in this case you might also consider using angular-resource and setting up a
+       * User $resource. */
+    	//alert(yaml);
+       $http.get('job_api_exec/?jobfile='+yaml).success(function(data) {
+    	    alert("job started");
+       });
+      
+    }
+     
+     $scope.jobstatus = function() {
+  /* the $http service allows you to make arbitrary ajax requests.
+       * in this case you might also consider using angular-resource and setting up a
+       * User $resource. */
+	//alert(yaml);
+
+    $http.get('job_api_status').success(function(data) {
+	    
+	    $scope.status = data;
+   });
+      
+    }
+
+});
+//GET http://localhost:5555/api/tasks for getting list of tasks--status "SUCESSS" "STARTED for running"
+
 function nodeover( ) {
 	this.attr({'r':50});
 	

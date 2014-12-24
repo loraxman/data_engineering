@@ -6,7 +6,7 @@
   <accordion close-others="oneAtATime">
 
 	<div  ng-repeat="job in jobs "> 	
-	    <accordion-group heading={{job.name}}>
+	    <accordion-group heading={{job.name}}--{{job.yamlfile}}>
   	    	<piechart divname="test2" waits="job.steps"></piechart>
  	    
 	    	<p>		{{job.description}} </p>
