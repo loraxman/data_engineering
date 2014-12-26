@@ -8,14 +8,14 @@
 	<div  ng-repeat="job in jobs "> 	
 	    <accordion-group heading={{job.name}}>
   	    	<piechart divname="test2" waits="job.steps"></piechart>
- 	    		<div  ng-controller="JobExecController" >
+ 	    		<div  ng-controller="JobExecController" ng-init='jobstatus()'>
  	    
 	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"></button>
-	    			<button type="button" ng-click="jobstatus()" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0"></button>
  						<div ng-repeat="stat in status">
- 							<div ng-if="stat.state == 'STARTED'">  	
+ 							<div ng-if="stat.state == 'STARTED' && stat.args.substring(3,stat.args.indexOf(')')-2) == job.yamlfile">  	
 
- 								<p>{{stat}}</p>
+ 								
+ 								<p>RUNNING</p>
  							</div>
  						</div>
  				</div>

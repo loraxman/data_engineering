@@ -19,7 +19,7 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
 	});
 });
 
-dataeng.controller('JobExecController', function($scope , $http, $routeParams) {
+dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
      $scope.jobexec = function(yaml) {
       /* the $http service allows you to make arbitrary ajax requests.
        * in this case you might also consider using angular-resource and setting up a
@@ -30,6 +30,15 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams) {
        });
       
     }
+     $scope.jobdebug = function(stat) {
+    	 console.log(Object.keys(stat)); //args.subString(3,stat.args.indexOf(')')-2))
+    	 Object.keys(stat).forEach (function (key) {
+    		 var it = stat[key];
+    		 console.log(it.args.substring(3,it.args.indexOf(')')-2));
+    		 });
+    	 
+    	 
+     }
      
      $scope.jobstatus = function() {
   /* the $http service allows you to make arbitrary ajax requests.
@@ -43,6 +52,24 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams) {
    });
       
     }
+    //update status each sec
+    stop = $interval(function() {
+    	$scope.jobstatus();
+    },1000);
+    
+    // have to destroy interval according to angular docs
+    $scope.stopFight = function() {
+        if (angular.isDefined(stop)) {
+          $interval.cancel(stop);
+          stop = undefined;
+        }
+      };
+
+    // on destroy clean up intervals
+    $scope.$on('$destroy', function() {
+          // Make sure that the interval is destroyed too
+          $scope.stopFight();
+        });
 
 });
 //GET http://localhost:5555/api/tasks for getting list of tasks--status "SUCESSS" "STARTED for running"
