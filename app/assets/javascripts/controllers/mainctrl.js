@@ -19,6 +19,31 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
 	});
 });
 
+dataeng.controller('DataModelController', function($scope , $http, $routeParams,$interval) {
+	$scope.datamodelimg="/assets/images/claim.png";
+	$scope.newmodel = function() {
+		$http.post('/datamodel/datamodel_api_change', {modelcode: $scope.modeltext}).
+		  success(function(data, status, headers, config) {
+		    // this callback will be called asynchronously
+		    // when the response is available
+		    $scope.datamodelimg="/assets/images/claim.png"+ '?' + new Date().getTime();
+		   
+		   // $scope.$apply();
+		    //alert("yes");
+		  }).
+		  error(function(data, status, headers, config) {
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+		  });
+	}
+	
+	$scope.$watch('modeltext', function(newVal, oldVal){
+		console.log('changed');
+		$scope.newmodel();
+    
+	});
+});
+
 dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
      $scope.jobexec = function(yaml) {
       /* the $http service allows you to make arbitrary ajax requests.

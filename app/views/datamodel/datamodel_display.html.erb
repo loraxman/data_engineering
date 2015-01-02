@@ -1,0 +1,24 @@
+<h1> Data Model</h1>
+
+<div ng-controller="DataModelController">
+
+
+
+	   <div class="row con">
+		 <div class="col-sm-7" id="modelimg">
+			<img ng-model="modeltext" src={{datamodelimg}} width="900" height="900"></img>
+		</div>
+		<div class="col-sm-5" id="modeltext">
+			<textarea name="modeltext"  ng-model="modeltext" rows="400" cols="50"></textarea>
+		</div>
+		
+	  </div>
+	
+
+</div>
+
+<style>
+#modelimg {
+overflow: scroll;
+}
+</style>
