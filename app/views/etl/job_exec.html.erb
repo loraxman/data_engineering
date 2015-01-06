@@ -16,11 +16,19 @@
 	    			{{job.yamlfile}}
  						<div ng-repeat="stat in status">
  							<div ng-if="stat.state == 'STARTED' && stat.args.substring(3,stat.args.indexOf(')')-2) == job.yamlfile">  	
+ 	 						<div ng-model="jobdetail">
+	
+	 								
+	 								<p>{{jobdetails}}</p>
+	 					
+	 						</div>
 
  								
  								<p>RUNNING</p>
+ 							
  							</div>
  						</div>
+ 						
  				</div>
 	    	<p>		{{job.description}} </p>
 				<div id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>

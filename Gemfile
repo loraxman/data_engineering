@@ -42,3 +42,5 @@ gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) support
 gem "twitter-bootstrap-rails"
 gem 'will_paginate'
 gem "rails_config"
+gem "pg"
+gem "redis"

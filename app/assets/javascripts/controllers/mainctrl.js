@@ -19,6 +19,19 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
 	});
 });
 
+dataeng.controller('AsimovController', function($scope , $http, $routeParams) {
+	$scope.notices="";
+	$scope.executedb = function() {
+	 	$http({method: 'GET', url:'execute_api'}).
+		success(function(data, status, headers, config) {
+		       $scope.notices = data.results; 
+		       console.log(data);
+		});
+
+	}
+});
+
+
 dataeng.controller('DataModelController', function($scope , $http, $routeParams,$interval) {
 	$scope.datamodelimg="/assets/images/claim.png";
 	$scope.newmodel = function() {
@@ -45,6 +58,7 @@ dataeng.controller('DataModelController', function($scope , $http, $routeParams,
 });
 
 dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
+	$scope.yamls=[];
      $scope.jobexec = function(yaml) {
       /* the $http service allows you to make arbitrary ajax requests.
        * in this case you might also consider using angular-resource and setting up a
@@ -52,6 +66,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
     	//alert(yaml);
        $http.get('job_api_exec/?jobfile='+yaml).success(function(data) {
     	    alert("job started");
+    	    $scope.yamls.push(yaml);
        });
       
     }
@@ -65,22 +80,39 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
     	 
      }
      
+     
+    $scope.jobdetails = function(yamlfile) {
+     	    $http.get('job_api_status_details?jobfile='+yamlfile).success(function(data) {
+		    
+	    	$scope.jobdetails = data;
+		});
+    }
+    
+    
      $scope.jobstatus = function() {
-  /* the $http service allows you to make arbitrary ajax requests.
-       * in this case you might also consider using angular-resource and setting up a
-       * User $resource. */
-	//alert(yaml);
 
-    $http.get('job_api_status').success(function(data) {
-	    
-	    $scope.status = data;
-   });
+	    $http.get('job_api_status').success(function(data) {
+		    
+		    $scope.status = data;
+	   });
+	   for (var i=0;i<$scope.yamls.length;i++) {
+		   console.log($scope.yamls[i]);
+		  //$scope.jobdetails($scope.yamls[i]);
+   	    	$http.get('job_api_status_details?jobfile='+$scope.yamls[i]).success(function(data) {
+		    
+			$scope.jobdetails = data;
+			});
+
+		   }
+	   
       
     }
+     
+
     //update status each sec
     stop = $interval(function() {
     	$scope.jobstatus();
-    },1000);
+    },3000);
     
     // have to destroy interval according to angular docs
     $scope.stopFight = function() {
