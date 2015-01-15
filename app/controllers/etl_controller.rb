@@ -35,7 +35,24 @@ class EtlController < ApplicationController
   end
   
  
+  def job_unittests
+     uri = URI.parse("#{Settings.etl_srv_url}/jobs/unittests")
+    
+    # Shortcut
+     @jobs  = Net::HTTP.get_response(uri).body
+     render 
+  end
+   
   
+  def job_api_unittests
+     uri = URI.parse("#{Settings.etl_srv_url}/jobs/unittests")
+    
+    # Shortcut
+     @jobs  = Net::HTTP.get_response(uri).body
+     render 
+  end
+  
+   
   def job_api_exec
       uri = URI.parse("#{Settings.etl_srv_url}/jobs/execute?jobfile=#{params[:jobfile]}")
       

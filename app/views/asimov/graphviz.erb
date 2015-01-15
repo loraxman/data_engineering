@@ -1,0 +1,58 @@
+digraph mcd 
+{
+edge  [len=2 labeldistance=2,arrowhead=crow];
+rankdir=TD;
+overlap=scale;
+splines=true;
+sep=.1;
+fontsize=32;
+fontname="Arial";
+
+
+label="Claims (w Multi-Payer)\l01/12/2015 16:39";
+
+node [shape=record fontsize=16 fontname="Arial" style="rounded,filled"];
+
+
+
+<% tabs.each do |tab,v| %>
+	<% fillcolor = "white" %>
+	<% case tab[0,2] %>
+	<% when "h_" %>
+	<%    fillcolor='"#ABDDEB"' %>
+	<% when "s_" %>
+	<%   fillcolor='"#FF9875"' %>
+	<% when "l_" %>
+	<%   fillcolor='"#FAFAAF"' %>	
+	<% when "vc" %>
+	<%   fillcolor='"#E6DFE3"' %>	
+	<% when "vh" %>
+	<%   fillcolor='"#E6DFE3"' %>	
+	<% end   %>
+	<%= raw tab+" " %>[label="{\N\n|<% v.each do | colname | %><%= raw colname %>\l<% end %>}" fillcolor=<%= raw fillcolor %>];
+<% end %>
+
+
+
+
+
+
+node [shape=ellipse fontsize=16 fontname="Arial" style="rounded,filled" fillcolor=red];
+
+<% fkeys.each do |tab,v| %>
+	<% if !v.nil? %>
+		<% v.each do | fortab | %><%= raw fortab %>-><%= raw tab %>;<% end %>
+	<% end %>
+	 
+<% end %>
+
+
+
+
+
+
+
+
+
+
+}

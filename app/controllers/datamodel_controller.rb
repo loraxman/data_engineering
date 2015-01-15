@@ -24,4 +24,14 @@ class DatamodelController < ApplicationController
     schema = File.read("/tmp/schema.sql")
     render :text => schema
   end
+  
+  def graph_api
+    Asimov.new.create_graph_for_db
+    render :text => "ok"
+
+  end
+  
+  def graph_display
+    render
+  end
 end

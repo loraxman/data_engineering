@@ -34,6 +34,9 @@ dataeng.controller('AsimovController', function($scope , $http, $routeParams) {
 
 dataeng.controller('DataModelController', function($scope , $http, $routeParams,$interval) {
 	$scope.datamodelimg="/assets/images/claim.png";
+	$scope.dbphysicalimg="/assets/images/physical.png";
+	$scope.dblogicalimg="/assets/images/logical.png";
+	
 	$scope.newmodel = function() {
 		$http.post('/datamodel/datamodel_api_change', {modelcode: $scope.modeltext}).
 		  success(function(data, status, headers, config) {
@@ -55,6 +58,26 @@ dataeng.controller('DataModelController', function($scope , $http, $routeParams,
 		$scope.newmodel();
     
 	});
+	
+	$scope.graph_db = function() {
+		$http.post('/datamodel/graph_api', {modelcode: $scope.modeltext}).
+		  success(function(data, status, headers, config) {
+		    // this callback will be called asynchronously
+		    // when the response is available
+		    $scope.dbphysicalimg="/assets/images/physical.png"+ '?' + new Date().getTime();
+		    $scope.dblogicalimg="/assets/images/logical.png"+ '?' + new Date().getTime();
+		   
+		   // $scope.$apply();
+		    //alert("yes");
+		  }).
+		  error(function(data, status, headers, config) {
+		    // called asynchronously if an error occurs
+		    // or server returns response with an error status.
+		  });
+	}
+	
+
+
 });
 
 dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
@@ -95,6 +118,20 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
 		    
 		    $scope.status = data;
 	   });
+	    
+	   if ($scope.yamls.length == 0 ) {
+		   $http({method: 'GET', url:'job_api_index'}).
+			success(function(data, status, headers, config) {
+			       $scope.jobs = data; 
+			       for(var i=0;i<$scope.jobs.length;i++) {
+			    	   $scope.yamls.push($scope.jobs[i].yamlfile);
+			    	   console.log("pushit");
+			    	   }
+			       
+			});
+		}
+	    
+	    
 	   for (var i=0;i<$scope.yamls.length;i++) {
 		   console.log($scope.yamls[i]);
 		  //$scope.jobdetails($scope.yamls[i]);
@@ -194,7 +231,7 @@ dataeng.directive('piechart', function() {
 	            	circles[scope.waits[i].name] = r.circle(x,y,20); 
 	            	circles[scope.waits[i].name].attr({'fill':colors[i]});
 	
-	            	circles[scope.waits[i].name].data({'custom':"run after this: \n"});
+	            	circles[scope.waits[i].name].data({'custom':"runs after this: \n"});
 	            	circles[scope.waits[i].name].mouseover(function nodeover(i) {
 	            	
 	            		this.animate({'r':30},250);

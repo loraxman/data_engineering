@@ -61,10 +61,14 @@ Rails.application.routes.draw do
   get "etl/job_api_exec"
   get "etl/job_api_status"
   get "etl/job_api_status_details"
+  get "etl/job_unittests"
+  
   get "datamodel/datamodel_display"
   get "datamodel/datamodel_dump"
 
   post "datamodel/datamodel_api_change"
+  post "datamodel/graph_api"
+  get "datamodel/graph_display"
   get "asimov/execute"
   get "asimov/execute_api"
 end

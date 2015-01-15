@@ -7,19 +7,31 @@
 
 	<div  ng-repeat="job in jobs "> 	
 	    <accordion-group heading={{job.name}}--{{job.description}}>
+	    
   	    	<piechart divname="test2" waits="job.steps"></piechart>
+	    	<p>		{{job.description}} </p>
+	    	
+	    	  <div class="row" >
+	    	  	 <div class="col-lg-4">
+					<div   id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>
+					
+						{{step.name}}-{{step.description}}
+					</div>
+				</div>
+			 </div>
+	    	  
  	    		<div  ng-controller="JobExecController" ng-init='jobstatus()'>
- 	     			
-	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+  	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
 	    			Start
 	    			</button>
 	    			{{job.yamlfile}}
+	    			  <div class="col-lg-8" >
  						<div ng-repeat="stat in status">
  							<div ng-if="stat.state == 'STARTED' && stat.args.substring(3,stat.args.indexOf(')')-2) == job.yamlfile">  	
- 	 						<div ng-model="jobdetail">
+ 	 						<div ng-model="jobdetail" ng-repeat="jobd in jobdetails">
 	
 	 								
-	 								<p>{{jobdetails}}</p>
+	 								<p>{{jobd}}</p>
 	 					
 	 						</div>
 
@@ -28,13 +40,9 @@
  							
  							</div>
  						</div>
- 						
+ 					  </div>
  				</div>
-	    	<p>		{{job.description}} </p>
-				<div id='steps' ng-repeat="step in job.steps" my-post-repeat-directive>
-				<div></div>
-					{{step.name}}-{{step.description}}
-				</div>
+			 </div>
 			<div ng-controller="ButtonsCtrl">
 	    </accordion-group>
 	</div>
