@@ -4,8 +4,8 @@
 
 <div ng-controller="DataModelController">
 
- 
-	 <button type="button" ng-click="graph_db()" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+	DBName:<input type="text" ng-model="dbname" /><br />
+	 <button type="button" ng-click="graph_db(dbname)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
 	 Refresh Graphs 
 	 </button>
 	 	<h2>Physical Model</h2>

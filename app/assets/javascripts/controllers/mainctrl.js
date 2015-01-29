@@ -60,7 +60,7 @@ dataeng.controller('DataModelController', function($scope , $http, $routeParams,
 	});
 	
 	$scope.graph_db = function() {
-		$http.post('/datamodel/graph_api', {modelcode: $scope.modeltext}).
+		$http.post('/datamodel/graph_api', {modelcode: $scope.modeltext, dbname: $scope.dbname}).
 		  success(function(data, status, headers, config) {
 		    // this callback will be called asynchronously
 		    // when the response is available
@@ -82,17 +82,35 @@ dataeng.controller('DataModelController', function($scope , $http, $routeParams,
 
 dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
 	$scope.yamls=[];
-     $scope.jobexec = function(yaml) {
-      /* the $http service allows you to make arbitrary ajax requests.
-       * in this case you might also consider using angular-resource and setting up a
-       * User $resource. */
-    	//alert(yaml);
+	$scope.cronrecurrs = true;
+	$scope.cronminute = 10;
+	$scope.cronhour = 15;
+	$scope.crondays=[true,false,false,false,false,false,true];
+    $scope.jobexec = function(yaml) {
        $http.get('job_api_exec/?jobfile='+yaml).success(function(data) {
     	    alert("job started");
     	    $scope.yamls.push(yaml);
        });
       
     }
+    
+    $scope.jobschedule = function(yaml) {
+        var data = {
+        	crondays : $scope.crondays,
+            cronminute : $scope.cronminute,
+            cronhour : $scope.cronhour,
+            cronrecurrs : $scope.cronrecurrs,
+            yamlfile : yaml
+        };
+        $http.post("job_api_schedule/", data).success(function(data, status) {
+            $scope.hello = data;
+        });
+             	
+
+
+      
+    }
+    
      $scope.jobdebug = function(stat) {
     	 console.log(Object.keys(stat)); //args.subString(3,stat.args.indexOf(')')-2))
     	 Object.keys(stat).forEach (function (key) {
@@ -149,7 +167,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
     //update status each sec
     stop = $interval(function() {
     	$scope.jobstatus();
-    },3000);
+    },30000);
     
     // have to destroy interval according to angular docs
     $scope.stopFight = function() {

@@ -26,7 +26,7 @@ class DatamodelController < ApplicationController
   end
   
   def graph_api
-    Asimov.new.create_graph_for_db
+    Asimov.new.create_graph_for_db params[:dbname]
     render :text => "ok"
 
   end

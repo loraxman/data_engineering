@@ -19,8 +19,52 @@
 					</div>
 				</div>
 			 </div>
-	    	  
+	    	  <br/><br/>
+	    	  <h4>Scheduling</h4>
  	    		<div  ng-controller="JobExecController" ng-init='jobstatus()'>
+ 	    		  <form ng-submit="jobschedule()">
+	 	    		<div class="row">
+	 	    			<div class="col-lg-4">
+			 	    		<input type="minute" class="form-control" id="cronmin" placeholder="Minute" ng-model="cronminute">Minute
+			 	    	</div>
+		    			<div class="col-lg-4">
+			 	    		<input type="hour" class="form-control" id="cronhour" placeholder="Hour" ng-model="cronhour">Hour
+			 	    	</div>
+	 	    			<div class="col-lg-4">
+			 	    		<label>
+							      <input type="checkbox" ng-model="cronrecurrs">Recurrs
+							</label>
+						</div>	    		 	 	    		
+		 	    	</div>
+	 	    		 <div class="checkbox">
+						    <label>
+						      <input type="checkbox" ng-model="crondays[0]">Sunday
+						    </label>	    		 
+						    <label>
+						      <input type="checkbox" ng-model="crondays[1]">Monday
+						    </label>
+						    <label>
+						      <input type="checkbox" ng-model="crondays[2]">Tuesday
+						    </label>
+						    <label>
+						      <input type="checkbox" ng-model="crondays[3]">Wedsnesday
+						    </label>
+						    <label>
+						      <input type="checkbox" ng-model="crondays[4]">Thursday
+						    </label>
+						    <label>
+						      <input type="checkbox" ng-model="crondays[5]">Friday
+						    </label>
+						    <label>
+						      <input type="checkbox" ng-model="crondays[6]">Saturday
+						    </label>
+						    
+						  </div>
+	  	    			<button type="button" ng-click="jobschedule(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
+		    			Schedule
+		    			</button>
+					 </form> 
+				 	    		
   	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
 	    			Start
 	    			</button>

@@ -1,5 +1,6 @@
 class EtlController < ApplicationController
   layout "data_engineering"
+  skip_before_filter  :verify_authenticity_token
   def index
     uri = URI.parse("#{Settings.etl_srv_url}/jobs")
     
@@ -27,6 +28,15 @@ class EtlController < ApplicationController
     @jobs  = Net::HTTP.get_response(uri).body
     render :json => @jobs
   end
+  
+  
+  def job_api_schedule
+
+    Etl.schedule(params[:yamlfile],params[:crondays],params[:cronhour],params[:cronminute],params[:cronrecurrs])
+    render :text => "OK"
+  end
+  
+  
   
   def job_api_status_details
     r = Redis.new

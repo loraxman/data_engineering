@@ -59,6 +59,7 @@ Rails.application.routes.draw do
   get "etl/job_exec"
   get "etl/job_api_index"
   get "etl/job_api_exec"
+  post "etl/job_api_schedule"
   get "etl/job_api_status"
   get "etl/job_api_status_details"
   get "etl/job_unittests"
