@@ -63,6 +63,7 @@ Rails.application.routes.draw do
   get "etl/job_api_status"
   get "etl/job_api_status_details"
   get "etl/job_unittests"
+  get 'etl/job_api_schedule_details'
   
   get "datamodel/datamodel_display"
   get "datamodel/datamodel_dump"

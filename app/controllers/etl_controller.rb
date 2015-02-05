@@ -20,7 +20,6 @@ class EtlController < ApplicationController
   end
   
   def job_api_status
-    r = Redis.new
     #r.hget(params[:jobfile])
     uri = URI.parse("#{Settings.celery_status}/api/tasks")
     
@@ -29,9 +28,14 @@ class EtlController < ApplicationController
     render :json => @jobs
   end
   
+  def job_api_schedule_details
+    r = Redis.new
+    sched = r.hget("taskhash",params[:jobfile])
+    render :json => sched
+  end  
+  
   
   def job_api_schedule
-
     Etl.schedule(params[:yamlfile],params[:crondays],params[:cronhour],params[:cronminute],params[:cronrecurrs])
     render :text => "OK"
   end

@@ -80,12 +80,15 @@ dataeng.controller('DataModelController', function($scope , $http, $routeParams,
 
 });
 
+   
+      
+
 dataeng.controller('JobExecController', function($scope , $http, $routeParams,$interval) {
 	$scope.yamls=[];
 	$scope.cronrecurrs = true;
-	$scope.cronminute = 10;
+	$scope.cronminute = 13;
 	$scope.cronhour = 15;
-	$scope.crondays=[true,false,false,false,false,false,true];
+	$scope.crondays=[false,false,false,false,false,false,false];
     $scope.jobexec = function(yaml) {
        $http.get('job_api_exec/?jobfile='+yaml).success(function(data) {
     	    alert("job started");
@@ -104,13 +107,13 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
         };
         $http.post("job_api_schedule/", data).success(function(data, status) {
             $scope.hello = data;
-        });
-             	
-
-
-      
+        });   
     }
     
+    $scope.dimdays = function() {
+    	alert($scope.cronrecurrs);
+    	$scope.disabledays=$scope.cronrecurrs;  	
+    }    
      $scope.jobdebug = function(stat) {
     	 console.log(Object.keys(stat)); //args.subString(3,stat.args.indexOf(')')-2))
     	 Object.keys(stat).forEach (function (key) {
@@ -124,12 +127,31 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
      
     $scope.jobdetails = function(yamlfile) {
      	    $http.get('job_api_status_details?jobfile='+yamlfile).success(function(data) {
-		    
-	    	$scope.jobdetails = data;
+     	    	
+	    	
 		});
     }
     
     
+     $scope.jobschedule_details = function(yamlfile) {
+	    	$http.get('job_api_schedule_details?jobfile='+yamlfile).success(function(data) {          			    
+        	$scope.scheddetails = data;
+        	if (data[yamlfile] == null)
+        		return;
+	    	var crontab = data[yamlfile]["schedule"];
+	    	
+	    	var minpos = crontab.indexOf("minute=");
+	   	    if (minpos != -1) {
+	   	    	minpos = minpos + 7;
+	    		$scope.cronminute = parseInt(crontab.substring(minpos,minpos +2));
+	    	
+	    	}
+
+        	
+        });
+    	 
+     }
+
      $scope.jobstatus = function() {
 
 	    $http.get('job_api_status').success(function(data) {
@@ -155,7 +177,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
 		  //$scope.jobdetails($scope.yamls[i]);
    	    	$http.get('job_api_status_details?jobfile='+$scope.yamls[i]).success(function(data) {
 		    
-			$scope.jobdetails = data;
+   	    		$scope.jobdetails = data;
 			});
 
 		   }
@@ -210,7 +232,7 @@ dataeng.controller('FirstCtrl', ['$scope', function($scope) {
 
 //below directive allows raphel to have a div passed in 
 //so that it can attach to the div at runtime from angular
-dataeng.directive('piechart', function() {
+dataeng.directive('jobchart', function() {
 	// assign a sequence to make the divid so that rapahel can 
 	// find one per piechart
 	 var uniqueId = 1;

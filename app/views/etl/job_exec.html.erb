@@ -8,7 +8,7 @@
 	<div  ng-repeat="job in jobs "> 	
 	    <accordion-group heading={{job.name}}--{{job.description}}>
 	    
-  	    	<piechart divname="test2" waits="job.steps"></piechart>
+ 	    	<jobchart divname="test2" waits="job.steps"></jobchart>
 	    	<p>		{{job.description}} </p>
 	    	
 	    	  <div class="row" >
@@ -19,43 +19,50 @@
 					</div>
 				</div>
 			 </div>
+			 
 	    	  <br/><br/>
+	    	  
+	    	  
+	    	  
+	    	  
 	    	  <h4>Scheduling</h4>
  	    		<div  ng-controller="JobExecController" ng-init='jobstatus()'>
- 	    		  <form ng-submit="jobschedule()">
-	 	    		<div class="row">
+ 	    		  
+ 	    		  <form ng-submit="jobschedule()" >
+	 	    		<div class="row"  ng-init='jobschedule_details(job.yamlfile)'>
 	 	    			<div class="col-lg-4">
-			 	    		<input type="minute" class="form-control" id="cronmin" placeholder="Minute" ng-model="cronminute">Minute
+			 	    		<input type="number" min="0" max="59" class="form-control" id="cronmin" placeholder="Minute" ng-model="cronminute" >Minute
 			 	    	</div>
 		    			<div class="col-lg-4">
-			 	    		<input type="hour" class="form-control" id="cronhour" placeholder="Hour" ng-model="cronhour">Hour
+			 	    		<input type="number" min="-1" max="23" class="form-control" id="cronhour" placeholder="Hour" ng-model="cronhour">Hour *   -1 means run each minute value
 			 	    	</div>
 	 	    			<div class="col-lg-4">
 			 	    		<label>
-							      <input type="checkbox" ng-model="cronrecurrs">Recurrs
+							      <input type="checkbox" ng-model="cronrecurrs"  >Recurrs
 							</label>
 						</div>	    		 	 	    		
 		 	    	</div>
-	 	    		 <div class="checkbox">
-						    <label>
-						      <input type="checkbox" ng-model="crondays[0]">Sunday
+		 	    	{{job.yamlfile}}
+	 	    		 <div  class="checkbox" >
+						    <label ng-hide="cronrecurrs">
+						      <input type="checkbox" ng-model="crondays[0]" >Sunday
 						    </label>	    		 
-						    <label>
+						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[1]">Monday
 						    </label>
-						    <label>
+						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[2]">Tuesday
 						    </label>
-						    <label>
-						      <input type="checkbox" ng-model="crondays[3]">Wedsnesday
+						    <label ng-hide="cronrecurrs">
+						      <input type="checkbox" ng-model="crondays[3]">Wednesday
 						    </label>
-						    <label>
+						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[4]">Thursday
 						    </label>
-						    <label>
+						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[5]">Friday
 						    </label>
-						    <label>
+						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[6]">Saturday
 						    </label>
 						    
@@ -64,7 +71,7 @@
 		    			Schedule
 		    			</button>
 					 </form> 
-				 	    		
+				 	<br/>	
   	    			<button type="button" ng-click="jobexec(job.yamlfile)" class="btn btn-primary" ng-model="singleModel" btn-checkbox btn-checkbox-true="1" btn-checkbox-false="0">
 	    			Start
 	    			</button>
