@@ -139,13 +139,34 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
         	if (data[yamlfile] == null)
         		return;
 	    	var crontab = data[yamlfile]["schedule"];
-	    	
-	    	var minpos = crontab.indexOf("minute=");
-	   	    if (minpos != -1) {
-	   	    	minpos = minpos + 7;
-	    		$scope.cronminute = parseInt(crontab.substring(minpos,minpos +2));
-	    	
+	    	console.log(crontab);
+	    	var timeres = $scope.parse_crontab("minute=", crontab);
+	    	console.log(timeres);
+	    	if ( timeres.timeval != -99) {
+	    		$scope.cronminute = timeres.timeval;
+	    		$scope.cronrecurrs = timeres.recurrs;
 	    	}
+	    		
+	    	var timeres = $scope.parse_crontab("hour=", crontab);
+	    	console.log(timeres);
+	    	if ( timeres.timeval != -99) {
+	    		$scope.cronhour = timeres.timeval;
+	    		$scope.cronrecurrs = timeres.recurrs;
+	    	}
+	    	
+	    	var timeres = $scope.parse_crontab("day_of_week=", crontab);
+	    	console.log(timeres);
+	    	if ( timeres.timeval != -99) {
+	    		$scope.cronhour = timeres.timeval;
+	    		
+	    	//crontab(minute=8,hour=15,day_of_week='0,3'), crontab(minute=13,hour='*/15'),crontab(minute='*/8')
+        		i = 0;
+        		for (i=0;i<timeres.dayarray.length;i++) {
+        			$scope.crondays[timeres.dayarray[i]] = true;
+        			
+        		}
+	    	
+        	}
 
         	
         });
@@ -185,6 +206,57 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
       
     }
      
+
+   $scope.parse_crontab = function(timequalifier,crontab) {
+	   
+	   	    var minpos = crontab.indexOf(timequalifier);
+	   	    if (minpos == -1)
+	   	    	return {
+       	   	          recurrs: false,
+       	   	          timeval: -99,
+       	   	          dayarray: []
+       	   	         };  
+	   	    	
+	   	    if (minpos != -1) {
+	   	    	minpos = minpos + timequalifier.length;
+	   	    	//day_of_week='0,2,4'
+	   	    	if (timequalifier == 'day_of_week=') {
+	   	    		//return array set based on above
+	   	    		var endnum = crontab.slice(minpos+1).indexOf("'");
+	   	    		var daystr = crontab.slice(minpos+1 );
+	   	    		daystr = daystr.replace(")","");
+	   	    		daystr = daystr.replace("'","");
+	   	    		daystr = daystr.split(",");
+	   	    		console.log($scope.crondays);
+	   	    		console.log("daystr:" + minpos + ";" + endnum + ";" + daystr);
+    	   	    	return {
+       	   	          recurrs: true,
+       	   	          timeval: 0,
+       	   	          dayarray: daystr
+       	   	         };  
+	   	    	}	   	    	
+	   	    	var endnum = crontab.slice(minpos).indexOf("'");
+	   	    	//is it recurr? */val
+	   	        if (crontab.substring(minpos+2,minpos+3) == '/') {
+	   	        	// move up 
+	   	        	var recurmin   = crontab.slice(minpos+3,endnum-2);
+    	   	         return {
+    	   	          recurrs: true,
+    	   	          timeval: parseInt(recurmin),
+    	   	          dayarray:  []
+    	   	         };  
+	   	        }
+	   	        else
+   	   	         return {
+   	   	          recurrs: false,
+   	   	          timeval: parseInt(crontab.substring(minpos,minpos +2)),
+    	   	      dayarray:  []
+   	   	         };  
+	    	
+	    	}
+   }
+   
+   
 
     //update status each sec
     stop = $interval(function() {
