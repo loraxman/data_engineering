@@ -153,6 +153,8 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
 	    		$scope.cronhour = timeres.timeval;
 	    		$scope.cronrecurrs = timeres.recurrs;
 	    	}
+	    	else
+	    		$scope.cronhour = -1;
 	    	
 	    	var timeres = $scope.parse_crontab("day_of_week=", crontab);
 	    	console.log(timeres);
