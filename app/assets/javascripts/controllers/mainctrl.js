@@ -7,8 +7,8 @@ dataeng.config(['$httpProvider', function($httpProvider) {
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }]);
 
-dataeng.controller('IndexController', function($scope , $http, $routeParams) {
-
+dataeng.controller('IndexController', function($scope , $http, $routeParams,$interval) {
+	$scope.yamls = [];
  	$http({method: 'GET', url:'job_api_index'}).
 	success(function(data, status, headers, config) {
 	       $scope.jobs = data; 
@@ -17,6 +17,60 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams) {
 	    //  d3test();
         
 	});
+
+   if ($scope.yamls.length == 0 ) {
+	   $http({method: 'GET', url:'job_api_index'}).
+		success(function(data, status, headers, config) {
+		       $scope.jobs = data; 
+		       for(var i=0;i<$scope.jobs.length;i++) {
+		    	   $scope.yamls.push($scope.jobs[i].yamlfile);
+		    	   console.log("pushit");
+		    	   }
+		       
+		});
+	}
+	
+
+
+	$scope.jobstatus = function() {
+
+	    $http.get('job_api_status').success(function(data) {
+		    
+		    $scope.status = data;
+	   });
+	    
+	    
+	   for (var i=0;i<$scope.yamls.length;i++) {
+   	    	$http.get('job_api_status_details?jobfile='+$scope.yamls[i]).success(function(data) {
+		    
+   	    		$scope.jobdetails = data;
+   	    	//	console.log(data);
+			});
+
+		   }
+	   	    
+
+	}
+    //update status each sec
+    stop = $interval(function() {
+    	$scope.jobstatus();
+    },5000);
+    
+    // have to destroy interval according to angular docs
+    $scope.stopFight = function() {
+        if (angular.isDefined(stop)) {
+          $interval.cancel(stop);
+          stop = undefined;
+        }
+      };
+
+    // on destroy clean up intervals
+    $scope.$on('$destroy', function() {
+          // Make sure that the interval is destroyed too
+          $scope.stopFight();
+        });
+	    
+	    
 });
 
 dataeng.controller('AsimovController', function($scope , $http, $routeParams) {
@@ -290,19 +344,7 @@ function nodeout() {
 	this.attr({'r':20});
 	}
 
-dataeng.controller('FirstCtrl', ['$scope', function($scope) {
 
-    $scope.fakeDataSets = {
-        biology: {
-            male: 20,
-            female: 5
-        },
-        physics: {
-            male: 10,
-            female: 10
-        }             
-    }
-}]);
 
 //below directive allows raphel to have a div passed in 
 //so that it can attach to the div at runtime from angular
@@ -310,11 +352,16 @@ dataeng.directive('jobchart', function() {
 	// assign a sequence to make the divid so that rapahel can 
 	// find one per piechart
 	 var uniqueId = 1;
+	 var paper = null;
+	 var paperhash={};
+	 var hashcircle = {};
+	 var hashidx = 0;
     return {
         restrict: 'E',
         scope: {
             divname: '=',
-            waits: '='
+            waits: '=',
+            status: '='
             
         },
         template: function(element,attrs) {
@@ -324,13 +371,41 @@ dataeng.directive('jobchart', function() {
         	
         link: function(scope, element, attrs) {
         	//console.log(scope.waits);
-        	scope.uniqueId = 'item' + uniqueId++;	// set the next divname
 
-        	//VERY IMPORTANT!! let Angular watch for changes on this div so that
+              scope.$watch('status', function (val) {
+                	   console.log("status:");
+                	   console.log(scope.status);
+                	   for (var k in scope.status) {
+                		   console.log(scope.status[k]);
+                		   var jobarray = $.parseJSON(scope.status[k].replace(/'/g,'"'));
+                		   for (var k1 in jobarray) {
+                			   var hashidx = hashcircle[jobarray[k1]];
+                			   var stepc = paperhash[scope.uniqueId].getById(hashidx);
+                			   if (stepc != null) {
+                				   console.log("foundit");
+                				   var origcolor = stepc.attr('fill');
+                				   var anim = Raphael.animation({r:40}, 1000).repeat(10); 
+                				   stepc.animate(anim.delay(30));
+                				  // console.log(origcolor);
+                				  // var anim = Raphael.animation({r:30}, 2000); 
+                				  // stepc.animate(anim.delay(10));
+
+                			   }
+                		   }
+                			   
+                	   }
+                	   
+                   });
+                   
+	   	
+        	scope.uniqueId = 'item' + uniqueId++;	// set the next divname
+         	//VERY IMPORTANT!! let Angular watch for changes on this div so that
         	//when it is created we do our Raphael animation
         	scope.$watch(scope.uniqueId, function (val) {
-	            var r  = new Raphael(scope.uniqueId, 450,200);
-	            var back = r.rect(0,0,450,200,5);
+	            var r  = new Raphael(scope.uniqueId, 650,200);
+	            paper = r;
+	            paperhash[scope.uniqueId] = r;
+	            var back = r.rect(0,0,650,200,5);
 	            back.attr({'fill':'#C7C7C7'});
 	            var x=25;
 	            var colors=['#F2676C','green','#5BAAE6', 'yellow','orange','grey'];
@@ -342,27 +417,30 @@ dataeng.directive('jobchart', function() {
 	            	var y = Math.random()*170;
 	            	console.log(x);
 	            	console.log(y);
-	            	circles[scope.waits[i].name] = r.circle(x,y,20); 
+	            	circles[scope.waits[i].name] = r.circle(x,y,30); 
+	            	circles[scope.waits[i].name].id = hashidx;
+	            	hashcircle[scope.waits[i].name] =  hashidx;
+	            	hashidx++;
 	            	circles[scope.waits[i].name].attr({'fill':colors[i]});
 	
 	            	circles[scope.waits[i].name].data({'custom':"runs after this: \n"});
 	            	circles[scope.waits[i].name].mouseover(function nodeover(i) {
 	            	
-	            		this.animate({'r':30},250);
+	            		this.animate({'r':40},250);
 	            		var textstr = "waiting on stuff";
 	            		textpop = this.paper.text(400,50,this.data('custom'));
 	           		
 	            	});
 	            	circles[scope.waits[i].name].mouseout(function nodeover() {
 	            		
-	            		this.animate({'r':20},250);
+	            		this.animate({'r':30},250);
 	            		textpop.remove();
 	            		
 	            	});
 	            	console.log(x);
 	            	console.log(y);
 	            	
-	            	var t1 = r.text(x-8, y/2, scope.waits[i].name);
+	            	var t1 = r.text(x-20, y/2, scope.waits[i].name);
 	            	t1.attr({'text-anchor':'start'});
 	            
 	            	x+=70;
@@ -397,6 +475,9 @@ dataeng.directive('jobchart', function() {
 	            	
 	        }
 	   )}
+
+
+
     }
 });
 

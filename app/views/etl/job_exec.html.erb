@@ -8,7 +8,7 @@
 	<div  ng-repeat="job in jobs "> 	
 	    <accordion-group heading={{job.name}}--{{job.description}}>
 	    
- 	    	<jobchart divname="test2" waits="job.steps"></jobchart>
+ 	    	<jobchart divname="test2" waits="job.steps"  status="jobdetails" ></jobchart>
 	    	<p>		{{job.description}} </p>
 	    	
 	    	  <div class="row" >
@@ -42,7 +42,6 @@
 							</label>
 						</div>	    		 	 	    		
 		 	    	</div>
-		 	    	{{job.yamlfile}}
 	 	    		 <div  class="checkbox" >
 						    <label ng-hide="cronrecurrs">
 						      <input type="checkbox" ng-model="crondays[0]" >Sunday
