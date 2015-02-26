@@ -1,0 +1,17 @@
+common: &common
+  facebook:
+    key: 'asdjhasxas'
+    secret : 'xyz'
+  twitter:
+    key: 'asdjhasxas'
+    secret : 'abx'
+
+development:
+  <<: *common
+  etl_srv_url: 'http://localhost:5000'
+
+test:
+  <<: *common
+
+production:
+  <<: *common

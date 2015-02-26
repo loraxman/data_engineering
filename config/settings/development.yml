@@ -1,0 +1,2 @@
+etl_srv_url: 'http://localhost:5000'
+celery_status: 'http://localhost:5555'
