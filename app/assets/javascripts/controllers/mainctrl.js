@@ -165,7 +165,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
     }
     
     $scope.dimdays = function() {
-    	alert($scope.cronrecurrs);
+ //   	alert($scope.cronrecurrs);
     	$scope.disabledays=$scope.cronrecurrs;  	
     }    
      $scope.jobdebug = function(stat) {
@@ -203,6 +203,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
 	    		
 	    	var timeres = $scope.parse_crontab("hour=", crontab);
 	    	console.log(timeres);
+//	    	alert(timeres.timeval);
 	    	if ( timeres.timeval != -99) {
 	    		$scope.cronhour = timeres.timeval;
 	    		$scope.cronrecurrs = timeres.recurrs;
@@ -213,7 +214,7 @@ dataeng.controller('JobExecController', function($scope , $http, $routeParams,$i
 	    	var timeres = $scope.parse_crontab("day_of_week=", crontab);
 	    	console.log(timeres);
 	    	if ( timeres.timeval != -99) {
-	    		$scope.cronhour = timeres.timeval;
+	//    		$scope.cronhour = timeres.timeval;
 	    		
 	    	//crontab(minute=8,hour=15,day_of_week='0,3'), crontab(minute=13,hour='*/15'),crontab(minute='*/8')
         		i = 0;
