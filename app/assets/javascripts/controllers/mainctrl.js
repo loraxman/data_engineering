@@ -54,7 +54,7 @@ dataeng.controller('IndexController', function($scope , $http, $routeParams,$int
     //update status each sec
     stop = $interval(function() {
     	$scope.jobstatus();
-    },5000);
+    },10000);
     
     // have to destroy interval according to angular docs
     $scope.stopFight = function() {
