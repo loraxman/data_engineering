@@ -18,7 +18,7 @@ class Asimov
     "  select pgasimov_create_historical_normalized_views();",
       
     "  select pgasimov_create_load_hub_procs();"]
-    conn = PG.connect( dbname: 'Asimov' )
+    conn = PG.connect( dbname: 'HAL' )
     conn.set_notice_processor{|r| retstr += r}
       
     sqls.each do |sql| 
@@ -49,9 +49,9 @@ class Asimov
    @fkeys = {}
    conn = PG.connect( dbname: dbnamein )
    if classifiers == "ALL"
-     tabsql = "select table_name from information_schema.tables where table_catalog = '#{dbnamein}' and table_schema = 'public' and substring(table_name,1,2) != 'pg'  "
+     tabsql = "select table_name from information_schema.tables where table_catalog = '#{dbnamein}' and table_schema = 'vault' and substring(table_name,1,2) != 'pg'  "
    else
-     tabsql = "select table_name from information_schema.tables where table_catalog = '#{dbnamein}' and table_schema = 'public' and substring(table_name,1,2)  IN #{classifiers} "
+     tabsql = "select table_name from information_schema.tables where table_catalog = '#{dbnamein}' and table_schema = 'vault' and substring(table_name,1,2)  IN #{classifiers} "
    end
    conn.exec( tabsql ) do |result|
    result.each do |row|
@@ -62,7 +62,7 @@ class Asimov
    @tabs.each do | tab,v | 
      puts tab
      
-    colsql = "select column_name from information_schema.columns where table_catalog = '#{dbnamein}' and table_schema = 'public' and table_name = '#{tab}' order by ordinal_position"
+    colsql = "select column_name from information_schema.columns where table_catalog = '#{dbnamein}' and table_schema = 'vault' and table_name = '#{tab}' order by ordinal_position"
     puts colsql
     conn.exec( colsql ) do |result|
     result.each do |row|
