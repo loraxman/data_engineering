@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   #     # (app/controllers/admin/products_controller.rb)
   #     resources :products
   #   end
-  
+
   get "home/index"
   get "etl/index"
   get "etl/job_exec"
@@ -64,7 +64,9 @@ Rails.application.routes.draw do
   get "etl/job_api_status_details"
   get "etl/job_unittests"
   get 'etl/job_api_schedule_details'
-  
+  get 'etl/restart'
+  get 'etl/restart_schedule'
+
   get "datamodel/datamodel_display"
   get "datamodel/datamodel_dump"
 
